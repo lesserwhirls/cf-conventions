@@ -1,0 +1,59 @@
+name: Check Asciidoctor Build
+
+# Run on pull request events against the master branch to make sure Asciidoctor still builds
+# If successful, the resulting html and pdf files are uploaded as artifacts to make it easier
+# to preview the results of a PR.
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  # Job to build cf-conventions.html, cf-conventions.pdf
+  build_conventions:
+    name: Build cf-conventions html and pdf
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks out PR
+    - uses: actions/checkout@v2
+    # create build directory
+    - run: mkdir conventions_build
+    # Build cf-conventions.html using the Analog-inc asciidoctor-action
+    - name: Build cf-conventions.html
+      uses: Analog-inc/asciidoctor-action@v1.2
+      with:
+        shellcommand: 'asciidoctor cf-conventions.adoc -D conventions_build'
+    - name: Build cf-conventions.pdf
+     # Build cf-conventions.pdf using the Analog-inc asciidoctor-action
+      uses: Analog-inc/asciidoctor-action@v1.2
+      with:
+        shellcommand: 'asciidoctor-pdf -d book cf-conventions.adoc -D conventions_build'
+    - name: Upload cf-conventions doc preview
+      uses: actions/upload-artifact@v1
+      with:
+        name: conventions docs
+        path: conventions_build/
+
+  # Job to build conformance.html, conformance.pdf
+  build_conformance:
+    name: Build conformance html and pdf
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    # create build directory
+    - run: mkdir conformance_build
+    # Build conformance.html using the Analog-inc asciidoctor-action
+    - name: Build conformance.html
+      uses: Analog-inc/asciidoctor-action@v1.2
+      with:
+        shellcommand: 'asciidoctor conformance.adoc -D conformance_build'
+    # Build conformance.pdf using the Analog-inc asciidoctor-action
+    - name: Build conformance.pdf
+      uses: Analog-inc/asciidoctor-action@v1.2
+      with:
+        shellcommand: 'asciidoctor-pdf -d book conformance.adoc -D conformance_build'
+    - name: Upload conformance doc preview
+      uses: actions/upload-artifact@v1
+      with:
+        name: conformance docs
+        path: conformance_build/
