@@ -33,13 +33,23 @@ jobs:
     - name: Build cf-conventions.pdf
       uses: Analog-inc/asciidoctor-action@v1.2
       with:
-        shellcommand: 'asciidoctor-pdf --warnings -d book cf-conventions.adoc -D conventions_build'
+        shellcommand: 'asciidoctor-pdf --verbose -d book cf-conventions.adoc -D conventions_build'
     # Upload artifact containing cf-conventions.html, cf-conventions.pdf
     - name: Upload cf-conventions doc preview
       uses: actions/upload-artifact@v1
       with:
         name: conventions docs
         path: conventions_build/
+    - name: Upload cf-conventions html preview
+      uses: actions/upload-artifact@v2-preview
+      with:
+        name: conventions_html
+        path: conventions_build/cf-conventions.html
+    - name: Upload cf-conventions pdf preview
+      uses: actions/upload-artifact@v2-preview
+      with:
+        name: conventions_pdf
+        path: conventions_build/cf-conventions.pdf
 
   # Job to build conformance.html, conformance.pdf
   build_conformance:
@@ -54,12 +64,12 @@ jobs:
     - name: Build conformance.html
       uses: Analog-inc/asciidoctor-action@v1.2
       with:
-        shellcommand: 'asciidoctor conformance.adoc -D conformance_build'
+        shellcommand: 'asciidoctor --verbose conformance.adoc -D conformance_build'
     # Build conformance.pdf using the Analog-inc asciidoctor-action
     - name: Build conformance.pdf
       uses: Analog-inc/asciidoctor-action@v1.2
       with:
-        shellcommand: 'asciidoctor-pdf -d book conformance.adoc -D conformance_build'
+        shellcommand: 'asciidoctor-pdf --verbose -d book conformance.adoc -D conformance_build'
     # Upload artifact containing conformance.html, conformance.pdf
     - name: Upload conformance doc preview
       uses: actions/upload-artifact@v1
